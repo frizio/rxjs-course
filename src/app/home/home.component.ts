@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../model/course';
 import { createHttpObservable } from '../common/util';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { noop, Observable } from 'rxjs';
 
 
@@ -24,8 +24,11 @@ export class HomeComponent implements OnInit {
 
     const courses$: Observable<Course[]> = http$
       .pipe(
+        // tap is on operator used to produre side effect in the observable chain
+        tap( () => console.log('HTTP request executed') ),
         map( res => Object.values(res['payload']) )
       );
+
 
     this.beginnerCourses$ = courses$
     .pipe(
