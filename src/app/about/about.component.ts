@@ -14,6 +14,12 @@ export class AboutComponent implements OnInit {
 
     // this.playWithStreamAndObservable();
 
+    // this.concatenationExample();
+
+  }
+
+  concatenationExample() {
+
     // Observable concatenation example
     const source1$ = of(1, 2, 3);
     const source2$ = of(3, 4, 5);
