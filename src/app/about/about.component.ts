@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { interval, timer, fromEvent, noop } from 'rxjs';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { createHttpObservable } from '../common/util';
@@ -17,11 +18,17 @@ export class AboutComponent implements OnInit {
 
     const http$ = createHttpObservable('/api/courses');
 
-     http$.subscribe(
-       courses => console.log(courses),
-       noop,
-       () => console.log('Completed')
-     );
+    // Pipe is an Observable function that allow to chain multiple operators in order to produce a new observable
+    const courses$ = http$
+      .pipe(
+        map(res => res['payload'])
+      );
+
+    courses$.subscribe(
+      courses => console.log(courses),
+      noop,
+      () => console.log('Completed')
+    );
 
   }
 
