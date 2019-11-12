@@ -12,6 +12,11 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
+    // this.playWithStreamAndObservable();
+
+  }
+
+  playWithStreamAndObservable() {
     // Stream DEFINITION (not instance) with RxJS: A stream is of type Observable<>
     const interval$ = interval(1000);
 
@@ -37,7 +42,6 @@ export class AboutComponent implements OnInit {
       console.log('Unsubscription stream 5');
       theSubscription.unsubscribe();
     }, 5000);
-
   }
 
 }
