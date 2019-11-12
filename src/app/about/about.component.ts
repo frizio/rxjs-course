@@ -1,7 +1,5 @@
-import { map } from 'rxjs/operators';
-import { interval, timer, fromEvent, noop } from 'rxjs';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { createHttpObservable } from '../common/util';
+import { interval, timer, fromEvent } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'about',
@@ -15,20 +13,6 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
 
     // this.playWithStreamAndObservable();
-
-    const http$ = createHttpObservable('/api/courses');
-
-    // Pipe is an Observable function that allow to chain multiple operators in order to produce a new observable
-    const courses$ = http$
-      .pipe(
-        map(res => res['payload'])
-      );
-
-    courses$.subscribe(
-      courses => console.log(courses),
-      noop,
-      () => console.log('Completed')
-    );
 
   }
 
