@@ -12,35 +12,33 @@ import { noop, Observable } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  beginnerCourses: Course[];
+  beginnerCourses$: Observable<Course[]>;
 
-  advancedCourses: Course[];
+  advancedCourses$: Observable<Course[]>;
 
   constructor() { }
 
   ngOnInit() {
 
     const http$ = createHttpObservable('/api/courses');
+
     const courses$: Observable<Course[]> = http$
       .pipe(
         map( res => Object.values(res['payload']) )
       );
 
-
-    // The subscription is now handled at the level of the template with async pipe
-    courses$.subscribe(
-      courses => {
-        console.log(courses);
-        this.beginnerCourses =
-          courses.filter( course => course.category === 'BEGINNER' );
-        this.advancedCourses =
-          courses.filter( course => course.category === 'ADVANCED' );
-      },
-      noop,
-      () => console.log('Completed')
+    this.beginnerCourses$ = courses$
+    .pipe(
+      map( courses => courses.filter( course => course.category === 'BEGINNER' ) )
     );
 
+    this.advancedCourses$ = courses$
+    .pipe(
+      map( courses => courses.filter( course => course.category === 'ADVANCED' ) )
+    );
 
-    }
+    // The subscription is now handled at the level of the template with observable var + async pipe
+
+  }
 
 }
