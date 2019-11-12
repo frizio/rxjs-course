@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Course} from "../model/course";
+import {Course} from '../model/course';
 import {interval, Observable, of, timer} from 'rxjs';
 import {catchError, delayWhen, map, retryWhen, shareReplay, tap} from 'rxjs/operators';
 
