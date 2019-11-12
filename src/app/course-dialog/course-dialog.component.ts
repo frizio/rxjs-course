@@ -39,7 +39,15 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
 
+      // Detect value changes in the form
+      const formChanges$ =
+        this.form.valueChanges
+        .pipe(
+            // Filter values that are invalid
+            filter( () => this.form.valid )
+          );
 
+      formChanges$.subscribe(console.log);
 
     }
 
