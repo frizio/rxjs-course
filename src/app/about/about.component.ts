@@ -1,3 +1,4 @@
+import { interval, timer, fromEvent } from 'rxjs';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
@@ -11,26 +12,19 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
-    // Click in the html page: countinuing stream
-    document.addEventListener(
-      'click',
-      (event) => {
-        console.log(event);
-        // Ajax request or Http request analogy: emit one value and complete
-        setTimeout(() => {
-          console.log('Time is over');
-          // Long polling in the backgroud: continuing stream
-          let counter = 0;
-          setInterval(
-            () => {
-              console.log(counter);
-              counter++;
-            },
-            1000
-          );
-        }, 5000);
-      }
-    );
+    // Stream DEFINITION (not instance) with RxJS: A stream is of type Observable<>
+    const interval$ = interval(1000);
+
+    // An observable become a stream only if there is a subscription to them.
+    // interval$.subscribe( (value) => console.log('Stream 1: ' + value) );
+    // Another stream
+    // interval$.subscribe( (value) => console.log('Stream 2: ' + value) );
+
+    const timer$ = timer(3000, 1000);
+    timer$.subscribe( (value) => console.log('Stream 3: ' + value) );
+
+    const click$ = fromEvent(document, 'click');
+    click$.subscribe( (event) => console.log(event) );
 
   }
 
