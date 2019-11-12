@@ -16,23 +16,21 @@ export class AboutComponent implements OnInit {
       'click',
       (event) => {
         console.log(event);
+        // Ajax request or Http request analogy: emit one value and complete
+        setTimeout(() => {
+          console.log('Time is over');
+          // Long polling in the backgroud: continuing stream
+          let counter = 0;
+          setInterval(
+            () => {
+              console.log(counter);
+              counter++;
+            },
+            1000
+          );
+        }, 5000);
       }
     );
-
-    // Long polling in the backgroud: continuing stream
-    let counter = 0;
-    setInterval(
-      () => {
-        console.log(counter);
-        counter++;
-      },
-      1000
-    );
-
-    // Ajax request or Http request analogy: emit one value and complete
-    setTimeout(() => {
-      console.log('Time is over');
-    }, 5000);
 
   }
 
