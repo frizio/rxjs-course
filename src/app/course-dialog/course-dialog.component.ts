@@ -38,7 +38,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
+      /*
       // Detect value changes in the form
       const formChanges$ =
         this.form.valueChanges
@@ -46,8 +46,30 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
             // Filter values that are invalid
             filter( () => this.form.valid )
           );
-
       formChanges$.subscribe(console.log);
+      */
+     this.form.valueChanges
+     .pipe(
+         // Filter values that are invalid
+         filter( () => this.form.valid )
+       )
+      .subscribe(
+        changes => {
+          const saveCourse$ = fromPromise(
+            fetch(
+              '/api/courses/' + this.course.id,
+              {
+                method: 'PUT',
+                body: JSON.stringify(changes),
+                headers: { 'content-type': 'application/json' }
+              }
+            )
+          );
+
+          saveCourse$.subscribe(console.log);
+        }
+
+      );
 
     }
 
