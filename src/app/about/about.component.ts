@@ -1,4 +1,4 @@
-import { interval, timer, fromEvent } from 'rxjs';
+import { interval, timer, fromEvent, of, concat } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -13,6 +13,15 @@ export class AboutComponent implements OnInit {
   ngOnInit() {
 
     // this.playWithStreamAndObservable();
+
+    // Observable concatenation example
+    const source1$ = of(1, 2, 3);
+    const source2$ = of(3, 4, 5);
+    const source3$ = of(7, 8, 9);
+
+    // Sequentatial concatenation
+    const result$ = concat(source1$, source2$, source3$);
+    result$.subscribe(console.log);
 
   }
 
