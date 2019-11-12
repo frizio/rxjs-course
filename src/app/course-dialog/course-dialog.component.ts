@@ -41,18 +41,11 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
       const formChanges$ = this.form.valueChanges
       .pipe(
-          // Filter values that are invalid
-          filter( () => this.form.valid )
+          filter( () => this.form.valid ),
+          concatMap(changes => this.saveCourse(changes))
         );
 
-      formChanges$.subscribe(
-        changes => {
-          // It's necessary mixing mapping and concatenation
-          const saveCourse$ = fromPromise( this.saveCourse(changes));
-          saveCourse$.subscribe(console.log);
-        }
-
-      );
+      formChanges$.subscribe();
 
     }
 
