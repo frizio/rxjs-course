@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Course} from '../model/course';
 import { createHttpObservable } from '../common/util';
 import { map } from 'rxjs/operators';
-import { noop } from 'rxjs';
+import { noop, Observable } from 'rxjs';
 
 
 @Component({
@@ -21,11 +21,13 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
 
     const http$ = createHttpObservable('/api/courses');
-    const courses$ = http$
+    const courses$: Observable<Course[]> = http$
       .pipe(
-        map( res => res['payload'] )
+        map( res => Object.values(res['payload']) )
       );
 
+
+    // The subscription is now handled at the level of the template with async pipe
     courses$.subscribe(
       courses => {
         console.log(courses);
