@@ -25,21 +25,21 @@ export class HomeComponent implements OnInit {
 
     const courses$: Observable<Course[]> = http$
       .pipe(
-        // tap is on operator used to produre side effect in the observable chain
-        tap( () => console.log('HTTP request executed') ),
-        map( res => res['payload'] ),
-        // Share response between multiple subscription
-        shareReplay(),
         catchError(
           err =>  {
-            console.log('Catch error ', err);
+            console.log('Catch Error');
             console.log(err);
             return throwError(err); // Return the expected osserbable with the error
           }
         ),
         finalize(
           () => console.log('Finalize executed!')
-        )
+        ),
+        // tap is on operator used to produre side effect in the observable chain
+        tap( () => console.log('HTTP request executed') ),
+        map( res => res['payload'] ),
+        // Share response between multiple subscription
+        shareReplay()
       );
 
     this.beginnerCourses$ = courses$
