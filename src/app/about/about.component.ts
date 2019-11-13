@@ -1,4 +1,5 @@
-import { interval, timer, fromEvent, of, concat } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { interval, timer, fromEvent, of, concat, merge } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -16,6 +17,15 @@ export class AboutComponent implements OnInit {
 
     // this.concatenationExample();
 
+    this.mergeExample();
+
+  }
+
+  mergeExample() {
+    const interval1$ = interval(1000);
+    const interval2$ = interval1$.pipe( map( value => 10 * value ) );
+    const result2$ = merge(interval1$, interval2$);
+    result2$.subscribe(console.log);
   }
 
   concatenationExample() {
