@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
 
   advancedCourses$: Observable<Course[]>;
 
+
   constructor() { }
 
   ngOnInit() {
@@ -30,7 +31,6 @@ export class HomeComponent implements OnInit {
         // Share response between multiple subscription
         shareReplay()
       );
-
 
     this.beginnerCourses$ = courses$
     .pipe(

@@ -16,10 +16,11 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     form: FormGroup;
     course: Course;
+    @ViewChild('saveButton', { static: true })
+    saveButton: ElementRef;
+    @ViewChild('searchInput', { static: true })
+    searchInput: ElementRef;
 
-    @ViewChild('saveButton', { static: true }) saveButton: ElementRef;
-
-    @ViewChild('searchInput', { static: true }) searchInput: ElementRef;
 
     constructor(
         private fb: FormBuilder,
@@ -38,20 +39,18 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-
       const formChanges$ = this.form.valueChanges
       .pipe(
           filter( () => this.form.valid ),
           concatMap(changes => this.saveCourse(changes))
         );
-
       formChanges$.subscribe();
-
     }
 
     saveCourse(changes: any): Promise<any> {
+      const theUrl = '/api/courses/' + this.course.id;
       return fetch(
-        '/api/courses/' + this.course.id,
+        theUrl,
         {
           method: 'PUT',
           body: JSON.stringify(changes),
@@ -60,13 +59,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
       );
     }
 
-
-    ngAfterViewInit() {
-
-
-    }
-
-
+    ngAfterViewInit() { }
 
     close() {
         this.dialogRef.close();
