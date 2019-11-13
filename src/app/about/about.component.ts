@@ -1,5 +1,5 @@
-import { map } from 'rxjs/operators';
-import { interval, timer, fromEvent, of, concat, merge } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { interval, timer, fromEvent, of, concat, merge, forkJoin } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { createHttpObservable } from '../common/util';
 
@@ -20,8 +20,31 @@ export class AboutComponent implements OnInit {
 
    //  this.mergeExample();
 
-   this.unsubscriptionExample();
+   // this.unsubscriptionExample();
 
+    this.forkJoinExample();
+
+  }
+
+  forkJoinExample() {
+    const courseId = 0;
+    const search = '';
+    const course$ = createHttpObservable(`/api/courses/${courseId}`);
+    const lessons$ = createHttpObservable(`/api/lessons?courseId=${courseId}&pageSize=100&filter=${search}`)
+                      .pipe(
+                        map( res => res['payload'] )
+                      );
+
+    forkJoin(course$, lessons$)
+      .pipe(
+        tap(
+          ([course, lessons]) => {
+            console.log('Course', course);
+            console.log('Lessons ', lessons);
+          }
+        )
+      )
+      .subscribe();
   }
 
   unsubscriptionExample() {
