@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
           err =>  {
             console.log('Catch error');
             // Provide alternative observable (example, values from offline database)
-            of (
+            return of (
               [
                 {
                   id: 0,
