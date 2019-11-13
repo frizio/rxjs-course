@@ -18,7 +18,8 @@ import {
   switchMap,
   withLatestFrom,
   concatAll,
-  shareReplay
+  shareReplay,
+  throttleTime
 } from 'rxjs/operators';
 import { merge, fromEvent, Observable, concat } from 'rxjs';
 import { Lesson } from '../model/lesson';
@@ -57,6 +58,13 @@ export class CourseComponent implements OnInit, AfterViewInit {
                         distinctUntilChanged(),
                         switchMap(search => this.loadLessons(search))
                       );
+
+    fromEvent<any>(this.input.nativeElement, 'keyup')
+      .pipe(
+        map( event => event.target.value ),
+        // debounceTime(500),
+        throttleTime(1500),
+      ).subscribe(console.log);
 
   }
 
