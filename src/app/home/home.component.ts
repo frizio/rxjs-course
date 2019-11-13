@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../model/course';
 import { createHttpObservable } from '../common/util';
-import { map, tap, shareReplay, catchError } from 'rxjs/operators';
-import { noop, Observable, of } from 'rxjs';
+import { map, tap, shareReplay, catchError, finalize } from 'rxjs/operators';
+import { noop, Observable, of, throwError } from 'rxjs';
 
 
 @Component({
@@ -32,9 +32,13 @@ export class HomeComponent implements OnInit {
         shareReplay(),
         catchError(
           err =>  {
-            console.log('Catch error');
-            return of ( [] );
-        }
+            console.log('Catch error ', err);
+            console.log(err);
+            return throwError(err); // Return the expected osserbable with the error
+          }
+        ),
+        finalize(
+          () => console.log('Finalize executed!')
         )
       );
 
