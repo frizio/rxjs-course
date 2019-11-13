@@ -42,9 +42,11 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
       const formChanges$ = this.form.valueChanges
       .pipe(
           filter( () => this.form.valid ),
-          // Concat strategy for combining observable:
+          // CONCAT strategy for combining observable in SEQUENTIAL manner:
           // waiting for an observer completation before subscribe and use the next observable
           concatMap(changes => this.saveCourse(changes))
+          // MERGE strategy for combining observable in PARALLEL manner, for example: http requests or long running operations
+          // mergeMap(changes => this.saveCourse(changes))
         );
       formChanges$.subscribe();
     }
