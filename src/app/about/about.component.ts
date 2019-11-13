@@ -1,6 +1,7 @@
 import { map } from 'rxjs/operators';
 import { interval, timer, fromEvent, of, concat, merge } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import { createHttpObservable } from '../common/util';
 
 @Component({
   selector: 'about',
@@ -17,7 +18,25 @@ export class AboutComponent implements OnInit {
 
     // this.concatenationExample();
 
-    this.mergeExample();
+   //  this.mergeExample();
+
+   this.unsubscriptionExample();
+
+  }
+
+  unsubscriptionExample() {
+    const interval1$ = interval(1000);
+    const subscription = interval1$.subscribe(console.log);
+    setTimeout(() => {
+      console.log('Time is over');
+      subscription.unsubscribe();
+    }, 5000);
+
+    const http$ = createHttpObservable('/api/courses');
+    const sub = http$.subscribe(console.log);
+    setTimeout(() => {
+      sub.unsubscribe();
+    }, 0);
 
   }
 

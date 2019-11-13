@@ -3,8 +3,13 @@ import { Observable } from 'rxjs';
 export function createHttpObservable(url: string): Observable<any> {
 
   return Observable.create(
+
     observer => {
-      fetch('/api/courses') // return Promise<Response>
+      // Use abort controller to make the http request 'cancellable'
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      fetch(url, {signal}) // return Promise<Response>
         .then(
           response => {
             return response.json();
@@ -22,6 +27,7 @@ export function createHttpObservable(url: string): Observable<any> {
             console.log(err);
           }
         );
+      return () => controller.abort();
     }
   );
 
