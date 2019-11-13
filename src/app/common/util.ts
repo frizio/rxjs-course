@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-export function createHttpObservable(url: string): Observable<any> {
+export function createHttpObservable(url: string) {
 
   return Observable.create(
 
