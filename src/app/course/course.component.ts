@@ -1,3 +1,4 @@
+import { debug, RxJsLoggingLevel } from './../common/debug';
 import {
   AfterViewInit,
   Component,
@@ -45,7 +46,10 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.courseId = this.route.snapshot.params['id'];
-    this.course$ = createHttpObservable(`/api/courses/${this.courseId}`);
+    this.course$ = createHttpObservable(`/api/courses/${this.courseId}`)
+                      .pipe(
+                        debug( RxJsLoggingLevel.INFO, 'Course value' ),
+                      );
   }
 
   ngAfterViewInit() {
@@ -54,9 +58,11 @@ export class CourseComponent implements OnInit, AfterViewInit {
                       .pipe(
                         map( event => event.target.value ),
                         startWith(''),
+                        debug( RxJsLoggingLevel.TRACE, 'Search' ),
                         debounceTime(500),
                         distinctUntilChanged(),
-                        switchMap(search => this.loadLessons(search))
+                        switchMap(search => this.loadLessons(search)),
+                        debug( RxJsLoggingLevel.DEBUG, 'Lessons value' ),
                       );
 
     fromEvent<any>(this.input.nativeElement, 'keyup')
