@@ -7,7 +7,7 @@ import {COURSES} from './db-data';
 
 export function getAllCourses(req: Request, res: Response) {
 
-    const error = (Math.random() >= 0.5);
+    const error = false; // (Math.random() >= 0.5);
 
     if (error) {
         console.log('ERROR loading courses!');
@@ -15,7 +15,6 @@ export function getAllCourses(req: Request, res: Response) {
     } else {
       setTimeout(() => {
           res.status(200).json({payload: Object.values(COURSES)});
-          // res.status(500).json({message: 'Error occurred.'});
       }, 200);
 
    }
