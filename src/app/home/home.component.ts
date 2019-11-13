@@ -33,27 +33,7 @@ export class HomeComponent implements OnInit {
         catchError(
           err =>  {
             console.log('Catch error');
-            // Provide alternative observable (example, values from offline database)
-            return of (
-              [
-                {
-                  id: 0,
-                  description: 'RxJs In Practice Course',
-                  iconUrl: 'https://s3-us-west-1.amazonaws.com/angular-university/course-images/rxjs-in-practice-course.png',
-                  courseListIcon: 'https://angular-academy.s3.amazonaws.com/main-logo/main-page-logo-small-hat.png',
-                  longDescription: 'Understand the RxJs Observable pattern, learn the RxJs Operators via practical examples',
-                  category: 'BEGINNER',
-                  lessonsCount: 10
-                },
-                {
-                  id: 8,
-                  description: 'Angular Material Course',
-                  iconUrl: 'https://s3-us-west-1.amazonaws.com/angular-university/course-images/material_design.png',
-                  longDescription: 'Build Applications with the official Angular Widget Library',
-                  category: 'ADVANCED'
-                }
-              ]
-          );
+            return of ( [] );
         }
         )
       );

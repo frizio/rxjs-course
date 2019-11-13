@@ -12,7 +12,11 @@ export function createHttpObservable(url: string) {
       fetch(url, {signal}) // return Promise<Response>
         .then(
           response => {
-            return response.json();
+            if (response.ok) {
+              return response.json();
+            } else {
+              observer.error('Request failed with status code: ' + response.status);
+            }
           }
         )
         .then(
@@ -23,8 +27,8 @@ export function createHttpObservable(url: string) {
         )
         .catch(
           err => {
-            observer.error(err);
             console.log(err);
+            observer.error(err);
           }
         );
       return () => controller.abort();
