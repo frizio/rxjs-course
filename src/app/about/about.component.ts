@@ -1,5 +1,5 @@
 import { map, tap } from 'rxjs/operators';
-import { interval, timer, fromEvent, of, concat, merge, forkJoin } from 'rxjs';
+import { interval, timer, fromEvent, of, concat, merge, forkJoin, Subject, BehaviorSubject, AsyncSubject, ReplaySubject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { createHttpObservable } from '../common/util';
 
@@ -22,7 +22,37 @@ export class AboutComponent implements OnInit {
 
    // this.unsubscriptionExample();
 
-    this.forkJoinExample();
+    // this.forkJoinExample();
+
+    this.subjectExample();
+
+  }
+
+
+  subjectExample() {
+
+    // Subject: mixing of OBSERVER ans OBSERVABLE
+    // A subject is a very conveniente way to create coutum observable
+    // const subject = new Subject(); // Plain: NO memoru
+    // const subject = new BehaviorSubject(0); // Indipendent timing subscription
+    // const subject = new AsyncSubject(); // Long running calculation with lot of intermediate values (receive values if not complete)
+    const subject = new ReplaySubject();  // Late subscriber also receive all the values
+
+    const series$ = subject.asObservable();
+
+    series$.subscribe( val => console.log('Early', val) );
+    subject.next(1);
+    subject.next(2);
+    subject.next(3);
+    subject.next(4);
+    subject.complete();
+    // ANother use case: Multicasting of value from one obs and reemit them to multiple streams
+
+    setTimeout(() => {
+      console.log('After a few second...');
+      series$.subscribe( val => console.log('Late', val) );
+      subject.next(5);
+    }, 3000);
 
   }
 
