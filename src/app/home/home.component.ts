@@ -24,24 +24,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    const http$ = createHttpObservable('/api/courses');
-
-    const courses$: Observable<Course[]> = http$
-      .pipe(
-        // tap is on operator used to produre side effect in the observable chain
-        tap( () => console.log('HTTP request executed') ),
-        map( res => res['payload'] ),
-        // Share response between multiple subscription
-        shareReplay(),
-        retryWhen(
-          errors => {
-            console.log(errors);
-            return errors.pipe(
-              delayWhen( () => timer(2000) )
-            );
-          }
-        )
-      );
+    const courses$ = this.store.courses$;
 
     this.beginnerCourses$ = courses$
     .pipe(
