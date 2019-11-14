@@ -1,3 +1,4 @@
+import { Store } from './../common/store.service';
 import {AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {Course} from '../model/course';
@@ -23,6 +24,9 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
 
     constructor(
+
+        private store: Store,
+
         private fb: FormBuilder,
         private dialogRef: MatDialogRef<CourseDialogComponent>,
         @Inject(MAT_DIALOG_DATA) course: Course ) {
@@ -38,18 +42,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     }
 
-    ngOnInit() {
-      const formChanges$ = this.form.valueChanges
-      .pipe(
-          filter( () => this.form.valid ),
-          // CONCAT strategy for combining observable in SEQUENTIAL manner:
-          // waiting for an observer completation before subscribe and use the next observable
-          concatMap(changes => this.saveCourse(changes))
-          // MERGE strategy for combining observable in PARALLEL manner, for example: http requests or long running operations
-          // mergeMap(changes => this.saveCourse(changes))
-        );
-      formChanges$.subscribe();
-    }
+    ngOnInit() { }
 
     saveCourse(changes: any): Promise<any> {
       const theUrl = '/api/courses/' + this.course.id;
@@ -65,18 +58,19 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-      // Observable that models streams of clicks in the save button
-      const buttonClick$ = fromEvent(this.saveButton.nativeElement, 'click');
-      buttonClick$
-        .pipe(
-          exhaustMap( () => this.saveCourse(this.form.value) )
-        )
-        .subscribe();
-
      }
 
     close() {
         this.dialogRef.close();
+    }
+
+    save() {
+      // Trigger store modification method
+      this.store.saveCourse(this.course.id, this.form.value)
+        .subscribe(
+          () => this.close(),
+          (err) => alert(err)
+        );
     }
 
 }

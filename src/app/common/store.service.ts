@@ -3,6 +3,7 @@ import { Course } from './../model/course';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { createHttpObservable } from './util';
+import { fromPromise } from 'rxjs/internal-compatibility';
 
 // CENTRALIZED OBSERVABLE STORE
 // Design a centralized service that is going to contain our data and that service is going to expose a couple of observables.
@@ -46,7 +47,7 @@ export class Store {
 
   }
 
-  // SELECTOR METHODS
+  // SELECTOR METHODS: Data consuming operations
   selectBeginnerCourses() {
     return this.filterByCategory('BEGINNER');
   }
@@ -61,6 +62,35 @@ export class Store {
       .pipe(
         map( courses => courses.filter( course => course.category === category ) )
       );
+
+  }
+
+  saveCourse(courseId: number, changes): Observable<any> {
+    // Save the course in the in memory store
+    // broadcast the new value over the course to all subscribers.
+
+    // So the store is going to be modified optimistically in memory.
+    const courses = this.subject.getValue();
+    const courseIdx = courses.findIndex( course => course.id === courseId );
+    const newCourses = courses.slice(0);
+    newCourses[courseIdx] = {
+      ...courses[courseIdx],
+      ...changes
+    };
+    this.subject.next(newCourses);
+
+    // Then a request is going to be made to the backend,
+    // and the course is also going to be saved in our database.
+    return fromPromise(
+      fetch(
+        `/api/courses/${courseId}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(changes),
+          headers: { 'content-type': 'application/json' }
+        }
+      )
+    );
 
   }
 
