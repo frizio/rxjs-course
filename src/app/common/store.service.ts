@@ -44,6 +44,23 @@ export class Store {
 
       courses$.subscribe( courses => this.subject.next(courses) );
 
+  }
+
+  // SELECTOR METHODS
+  selectBeginnerCourses() {
+    return this.filterByCategory('BEGINNER');
+  }
+
+  selectAdvancedCourses() {
+    return this.filterByCategory('ADVANCED');
+  }
+
+  filterByCategory(category: string) {
+
+    return this.courses$
+      .pipe(
+        map( courses => courses.filter( course => course.category === category ) )
+      );
 
   }
 
