@@ -19,4 +19,10 @@ export class Store {
   // Public API of the store
   course$: Observable<Course[]> = this.subject.asObservable();
 
+
+  init() {
+
+  }
+
+
 }
