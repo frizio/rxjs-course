@@ -1,3 +1,4 @@
+import { Store } from './../common/store.service';
 import {Component, OnInit} from '@angular/core';
 import {Course} from '../model/course';
 import { createHttpObservable } from '../common/util';
@@ -17,7 +18,9 @@ export class HomeComponent implements OnInit {
   advancedCourses$: Observable<Course[]>;
 
 
-  constructor() { }
+  constructor(
+    private store: Store
+  ) { }
 
   ngOnInit() {
 
