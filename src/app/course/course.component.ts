@@ -21,9 +21,11 @@ import {
   withLatestFrom,
   concatAll,
   shareReplay,
-  throttleTime
+  throttleTime,
+  first,
+  take
 } from 'rxjs/operators';
-import { merge, fromEvent, Observable, concat } from 'rxjs';
+import { merge, fromEvent, Observable, concat, forkJoin } from 'rxjs';
 import { Lesson } from '../model/lesson';
 import { createHttpObservable } from '../common/util';
 
@@ -50,6 +52,30 @@ export class CourseComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.courseId = this.route.snapshot.params['id'];
     this.course$ = this.store.selectCourseById(this.courseId);
+    // course$ observable never complete. So:
+    // first() force the completion of long running observable, take(3) generalize them.
+    // .pipe
+      // first()
+      // take(2)
+    // );
+
+    /*
+    forkJoin(this.course$, this.loadLessons())
+      .subscribe(console.log);
+    */
+
+    this.loadLessons()
+    .pipe(
+      withLatestFrom( this.course$ )
+    )
+    .subscribe(
+      ( [lessons, course] ) => {
+        console.log(lessons);
+        console.log(course);
+      }
+
+    )
+
   }
 
   ngAfterViewInit() {
