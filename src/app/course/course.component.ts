@@ -1,3 +1,4 @@
+import { Store } from './../common/store.service';
 import { debug, RxJsLoggingLevel } from './../common/debug';
 import {
   AfterViewInit,
@@ -33,7 +34,7 @@ import { createHttpObservable } from '../common/util';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
-  courseId: string;
+  courseId: number;
 
   course$: Observable<Course>;
   lessons$: Observable<Lesson[]>;
@@ -42,14 +43,13 @@ export class CourseComponent implements OnInit, AfterViewInit {
   input: ElementRef;
 
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store) {}
 
   ngOnInit() {
     this.courseId = this.route.snapshot.params['id'];
-    this.course$ = createHttpObservable(`/api/courses/${this.courseId}`)
-                      .pipe(
-                        debug( RxJsLoggingLevel.INFO, 'Course value' ),
-                      );
+    this.course$ = this.store.selectCourseById(this.courseId);
   }
 
   ngAfterViewInit() {
